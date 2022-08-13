@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.servlet.http.HttpServletResponse;
+
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -44,6 +46,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().anyRequest().permitAll();
+
+        //display UNAUTHORIZED when we access protected API without logged in.
+        http.exceptionHandling().authenticationEntryPoint(
+                (request, response, ex) -> {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+                }
+        );
+        http.authorizeRequests()
+                .antMatchers("/auth/login").permitAll()
+                .anyRequest().authenticated() ;
+
+//        http.authorizeRequests().anyRequest().permitAll();
     }
 }
