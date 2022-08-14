@@ -56,6 +56,12 @@
             <version>0.9.1</version>
         </dependency>
 
+        <!--to use @EnableGlobalMethodSecurity -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
