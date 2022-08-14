@@ -10,6 +10,18 @@ This is a project consisting of authorization system for different APIs.
 3) Postman
 4) IntelliJ IDEA
 
+**Added **Logger** for logging the exceptions and implemented **unit test cases** for methods.
+
+**The executable *jar file* is in:
+`/out/artifacts/PermissionBasedAuthorization_jar`
+
+**To execute the jar file:**<br>
+1) Extract the file.
+2) Open the folder structure with any text editor (say IntelliJ IDEA).
+3) Add the corresponding SDK.
+4) Check the folder hierarchy according to Spring Boot.
+5) Run the main application. (**PermissionBasedAuthorizationApplication** in my project)
+
 **Tables in the database are as follows:**
 
 1) Devices table (used for storing different devices)
