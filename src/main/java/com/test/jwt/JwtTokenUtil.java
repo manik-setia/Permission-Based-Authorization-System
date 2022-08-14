@@ -58,7 +58,7 @@ public class JwtTokenUtil {
         return parseClaims(token).getSubject();
     }
 
-    private Claims parseClaims(String token){
+    public Claims parseClaims(String token){
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)

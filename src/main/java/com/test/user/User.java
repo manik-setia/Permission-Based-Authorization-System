@@ -1,12 +1,11 @@
 package com.test.user;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -56,7 +55,13 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<SimpleGrantedAuthority> authorityList=new ArrayList<>();
+
+        for(Role role: roles){
+            authorityList.add(new SimpleGrantedAuthority(role.getName()));
+        }
+
+        return authorityList;
     }
 
     public String getPassword() {

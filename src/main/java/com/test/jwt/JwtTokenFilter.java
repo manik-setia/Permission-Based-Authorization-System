@@ -1,6 +1,8 @@
 package com.test.jwt;
 
+import com.test.user.Role;
 import com.test.user.User;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -49,7 +51,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private void setAuthenticationContext(String accessToken, HttpServletRequest request){
         UserDetails userDetails=getUserDetails(accessToken);
 
-        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails, null, null);
+        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -58,7 +60,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     //constructs user object based on json web token
     private UserDetails getUserDetails(String accessToken){
         User userDetails=new User();
-        String[] jwtSubject=jwtTokenUtil.getSubject(accessToken).split(",");
+        Claims claims=jwtTokenUtil.parseClaims(accessToken);
+
+        String claimRoles=String.valueOf(claims.get("roles"));
+
+        System.out.println("claim roles: "+claimRoles);
+
+        //remove opening and closing brackets from claimRoles
+        claimRoles=claimRoles.replace("[", "").replace("]", "");
+        String[] roleNames=claimRoles.split(",");
+
+        for(String roleName: roleNames){
+            userDetails.addRole(new Role(roleName));
+        }
+
+        String subject=String.valueOf(claims.get(Claims.SUBJECT));
+        String[] jwtSubject=subject.split(",");
 
         userDetails.setId(Integer.parseInt(jwtSubject[0].trim()));
         userDetails.setEmail(jwtSubject[1]);
