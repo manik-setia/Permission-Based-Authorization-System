@@ -63,9 +63,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         Claims claims=jwtTokenUtil.parseClaims(accessToken);
 
         String claimRoles=String.valueOf(claims.get("roles"));
-
-        System.out.println("claim roles: "+claimRoles);
-
+        
         //remove opening and closing brackets from claimRoles
         claimRoles=claimRoles.replace("[", "").replace("]", "");
         String[] roleNames=claimRoles.split(",");
